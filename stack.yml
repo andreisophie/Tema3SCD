@@ -4,37 +4,47 @@ services:
     container_name: mqtt_broker
     ports:
       - 1883:1883
+    depends_on:
+      - mqtt_adapter_network
     networks:
-      - mqtt_server_network
+      - mqtt_adapter_network
+    volumes:
+      - ./mosquitto:/etc/mosquitto
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
   
   db:
     image: influxdb
     container_name: influxdb
     ports:
       - "8086:8086"
+    depends_on:
+      - adapter_db_network
+      - grafana_db_network
     networks:
-      - server_db_network
-      - grafana_bd_network
+      - adapter_db_network
+      - grafana_db_network
 
   grafana:
     image: grafana/grafana
     container_name: grafana
     ports:
       - 3000:3000
-    networks:
-      - grafana_bd_network
-
-  server:
-    build: .
-    container_name: server
     depends_on:
-      - db
-      - mqtt_broker
+      - grafana_db_network
     networks:
-      - mqtt_server_network
-      - server_db_network
+      - grafana_db_network
+
+  adapter:
+    image: tema3scd_adapter
+    container_name: adapter
+    depends_on:
+      - mqtt_adapter_network
+      - adapter_db_network
+    networks:
+      - mqtt_adapter_network
+      - adapter_db_network
 
 networks:
-  mqtt_db_network:
-  server_db_network:
-  grafana_bd_network:
+  mqtt_adapter_network:
+  adapter_db_network:
+  grafana_db_network:
