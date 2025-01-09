@@ -2,21 +2,19 @@ import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
 
 def on_message(client, userdata, message):
-    # userdata is the structure we choose to provide, here it's a list()
-    userdata.append(message.payload)
-    # We only want to process 10 messages
-    if len(userdata) >= 10:
-        client.unsubscribe("#")
+    # Print message to stdout
+    print(f"Received message '{message.payload.decode()}' on topic '{message.topic}'")
 
 # Connect to InfluxDB
-influxdbc = InfluxDBClient('db', 8086)
+# influxdbc = InfluxDBClient('influxdb', 8086)
+# print(influxdbc.get_list_database())
 
 # Connect to MQTT broker
 mqttc = mqtt.Client()
 mqttc.on_message = on_message
 
-mqttc.user_data_set([])
 mqttc.connect("mqtt_broker", port=1883)
 mqttc.subscribe("#")
+print("Connected to MQTT broker succesfully")
+
 mqttc.loop_forever()
-print(f"Received the following message: {mqttc.user_data_get()}")
