@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 
-mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "tema3scd publisher")
+mqttc = mqtt.Client()
 
 mqttc.connect(host="localhost")
 print("Connected to MQTT broker succesfully")

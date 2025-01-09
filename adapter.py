@@ -1,3 +1,4 @@
+from time import sleep
 import paho.mqtt.client as mqtt
 from influxdb import InfluxDBClient
 
@@ -15,6 +16,4 @@ mqttc.on_message = on_message
 
 mqttc.connect("mqtt_broker", port=1883)
 mqttc.subscribe("#")
-print("Connected to MQTT broker succesfully")
-
 mqttc.loop_forever()
