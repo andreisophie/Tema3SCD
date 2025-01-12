@@ -12,7 +12,7 @@ services:
   
   influxdb:
     image: influxdb:1.8
-    hostname: influxdb`
+    hostname: influxdb
     networks:
       - adapter_db_network
       - grafana_db_network
@@ -27,6 +27,8 @@ services:
       - 80:3000
     networks:
       - grafana_db_network
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
 
   adapter:
     image: tema3scd_adapter
@@ -47,3 +49,4 @@ volumes:
   mosquitto-data:
   influxdb2-data:
   influxdb2-config:
+  grafana_storage: {}
