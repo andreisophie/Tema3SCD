@@ -1,6 +1,8 @@
 import paho.mqtt.client as mqtt
 from time import sleep
 import json
+import random
+from datetime import datetime
 
 mqttc = mqtt.Client()
 
@@ -8,19 +10,28 @@ mqttc.connect(host="localhost", port=1883)
 print("Connected to MQTT broker succesfully")
 mqttc.loop_start()
 
-topic = "UPB/RPi_1"
+locations = ["UPB", "Andrei", "UNIBuc"]
+stations = ["RPi_1", "Gas", "Mongo"]
 
-payload = {
-    "BAT": 99,
-    "HUMID" : 40,
-    "PRJ" : "SCD",
-    "TMP" : 25.3,
-    "status": "OK" ,
-    "timestamp" : "2024-11-26T03:54:20+03:00"
-}
+while True:
+    topic = f"{random.choice(locations)}/{random.choice(stations)}"
+    
+    battery = random.randint(0, 100)
+    humidity = random.randint(0, 100)
+    temperature = random.uniform(0, 40)
 
-mqttc.publish(topic, payload=json.dumps(payload))
-print(f"Published message to topic {topic}")
+    payload = {
+        "BAT": battery,
+        "HUMID" : humidity,
+        "PRJ" : "SCD",
+        "TMP" : temperature,
+        "status": "OK" ,
+        # "timestamp" : datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")
+    }
+
+    mqttc.publish(topic, payload=json.dumps(payload))
+    print(f"Published message to topic {topic}")
+    sleep(5)
 
 mqttc.disconnect()
 mqttc.loop_stop()

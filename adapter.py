@@ -47,14 +47,13 @@ def on_message(client, userdata, message):
         data.append({
             "measurement": f"{station}.{key}",
             "tags": { "location": location, "station": station },
-            "time": timestamp,
+            "time": timestamp.strftime("%Y-%m-%dT%H:%M:%S%z"),
             "fields": { "value": value }
         })
         print(f"{location}.{station}.{key} {value}")
 
     # Write data to InfluxDB
     influxdbc.write_points(data)
-    print(f"Written data to InfluxDB")
         
             
 print("Starting adapter...")
