@@ -7,8 +7,8 @@ services:
     networks:
       - mqtt_adapter_network
     volumes:
-      - ./mosquitto-data:/etc/mosquitto
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto-data:/etc/mosquitto
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
   
   influxdb:
     image: influxdb:1.8
@@ -17,8 +17,8 @@ services:
       - adapter_db_network
       - grafana_db_network
     volumes:
-      - ./influxdb-data:/var/lib/influxdb
-      - ./influxdb-config:/etc/influxdb
+      - influxdb-data:/var/lib/influxdb
+      - influxdb-config:/etc/influxdb
 
   grafana:
     image: grafana/grafana
@@ -27,6 +27,9 @@ services:
       - 80:3000
     networks:
       - grafana_db_network
+    environment:
+      - GF_SECURITY_ADMIN_USER=asistent
+      - GF_SECURITY_ADMIN_PASSWORD=grafanaSCD2024
     volumes:
       - 'grafana_storage:/var/lib/grafana'
 
@@ -50,6 +53,6 @@ networks:
 
 volumes:
   mosquitto-data:
-  influxdb2-data:
-  influxdb2-config:
+  influxdb-data:
+  influxdb-config:
   grafana_storage: {}
