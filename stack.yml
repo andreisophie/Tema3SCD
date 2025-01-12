@@ -39,6 +39,9 @@ services:
     networks:
       - mqtt_adapter_network
       - adapter_db_network
+    environment:
+      - DEBUG_DATA_FLOW=true
+    command: ["python3", "-u", "adapter.py"]
 
 networks:
   mqtt_adapter_network:
